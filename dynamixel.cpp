@@ -12,11 +12,37 @@ namespace dx {
     digitalWrite(pins::DX_TTL_TX_EN, LOW);
   }
 
-  void torque_enable(bool enable) {
+  void change_id(uint8_t id, uint8_t desired_id) {
+    unsigned char packet[13] = {
+      0xFF, 0xFF, 0xFD, 0x00,
+      id,   0x06, 0x00, 0x03,
+      0x07, 0x00, desired_id, 0x00,
+      0x00
+    };
+
+    send(packet, 13);
+  }
+
+  void ping(uint8_t id) {
+    unsigned char packet[10] = {
+      0xFF, 0xFF, 0xFD, 0x00,
+      id,   0x03, 0x00, 0x01,
+      0x00, 0x00
+    };
+
+    send(packet, 10);
+
+    delay(100);
+    while(Serial1.available() > 0) {
+      Serial.println(Serial1.read(), HEX);
+    }
+  }
+
+  void torque_enable(uint8_t id, bool enable) {
     unsigned char enable_code = enable ? 1 : 0;
     unsigned char packet[13] = {
       0xFF, 0xFF, 0xFD, 0x00,
-      0x01, 0x06, 0x00, 0x03,
+      id,   0x06, 0x00, 0x03,
       0x40, 0x00, enable_code, 0x00,
       0x00
     };
@@ -24,12 +50,12 @@ namespace dx {
     send(packet, 13);
   }
 
-  void move(unsigned int pos) {
+  void move(uint8_t id, unsigned int pos) {
     unsigned char pos_l = pos & 0x00FF;
     unsigned char pos_h = (pos >> 8) & 0x00FF;
     unsigned char packet[16] = {
       0xFF, 0xFF, 0xFD, 0x00,
-      0x01, 0x09, 0x00, 0x03,
+      id,   0x09, 0x00, 0x03,
       0x74, 0x00, pos_l, pos_h,
       0x00, 0x00, 0x00, 0x00
     };

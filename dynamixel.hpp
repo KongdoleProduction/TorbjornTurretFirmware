@@ -6,8 +6,10 @@
 namespace dx {
 
   void init();
-  void torque_enable(bool enable);
-  void move(unsigned int pos);
+  void ping(uint8_t id);
+  void change_id(uint8_t id, uint8_t desired_id);
+  void torque_enable(uint8_t id, bool enable);
+  void move(uint8_t id, unsigned int pos);
   void send(char *data, unsigned short len);
 
 }
