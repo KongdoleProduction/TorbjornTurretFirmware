@@ -1,50 +1,55 @@
 #include <Arduino.h>
-#include "dynamixel.h"
+#include "dynamixel.hpp"
+#include "pins.hpp"
 
-unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size);
+uint16_t update_crc(uint16_t crc_accum, uint8_t *data_blk_ptr, uint16_t data_blk_size);
 
-void dx_init() {
-  Serial1.begin(DYNAMIXEL_BAUDRATE);
-  pinMode(TX_ENABLE_PIN, OUTPUT);
-  digitalWrite(TX_ENABLE_PIN, LOW);
+namespace dx {
+
+  void init() {
+    Serial1.begin(DYNAMIXEL_BAUDRATE);
+    pinMode(pins::DX_TTL_TX_EN, OUTPUT);
+    digitalWrite(pins::DX_TTL_TX_EN, LOW);
+  }
+
+  void torque_enable(bool enable) {
+    unsigned char enable_code = enable ? 1 : 0;
+    unsigned char packet[13] = {
+      0xFF, 0xFF, 0xFD, 0x00,
+      0x01, 0x06, 0x00, 0x03,
+      0x40, 0x00, enable_code, 0x00,
+      0x00
+    };
+
+    send(packet, 13);
+  }
+
+  void move(unsigned int pos) {
+    unsigned char pos_l = pos & 0x00FF;
+    unsigned char pos_h = (pos >> 8) & 0x00FF;
+    unsigned char packet[16] = {
+      0xFF, 0xFF, 0xFD, 0x00,
+      0x01, 0x09, 0x00, 0x03,
+      0x74, 0x00, pos_l, pos_h,
+      0x00, 0x00, 0x00, 0x00
+    };
+
+    send(packet, 16);
+  }
+
+  void send(char *data, unsigned short len) {
+    unsigned short crc = update_crc(0, data, len - 2);
+    data[len-2] = crc & 0x00FF;
+    data[len-1] = (crc >> 8) & 0x00FF;
+    digitalWrite(pins::DX_TTL_TX_EN, HIGH);
+    Serial1.write(data, len);
+    Serial1.flush();
+    digitalWrite(pins::DX_TTL_TX_EN, LOW);
+  }
+  
 }
 
-void dx_torque_enable(bool enable) {
-  unsigned char enable_code = enable ? 1 : 0;
-  unsigned char packet[13] = {
-    0xFF, 0xFF, 0xFD, 0x00,
-    0x01, 0x06, 0x00, 0x03,
-    0x40, 0x00, enable_code, 0x00,
-    0x00
-  };
-
-  dx_send(packet, 13);
-}
-
-void dx_move(unsigned int pos) {
-  unsigned char pos_l = pos & 0x00FF;
-  unsigned char pos_h = (pos >> 8) & 0x00FF;
-  unsigned char packet[16] = {
-    0xFF, 0xFF, 0xFD, 0x00,
-    0x01, 0x09, 0x00, 0x03,
-    0x74, 0x00, pos_l, pos_h,
-    0x00, 0x00, 0x00, 0x00
-  };
-
-  dx_send(packet, 16);
-}
-
-void dx_send(char *data, unsigned short len) {
-  unsigned short crc = update_crc(0, data, len - 2);
-  data[len-2] = crc & 0x00FF;
-  data[len-1] = (crc >> 8) & 0x00FF;
-  digitalWrite(TX_ENABLE_PIN, HIGH);
-  Serial1.write(data, len);
-  Serial1.flush();
-  digitalWrite(TX_ENABLE_PIN, LOW);
-}
-
-unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size)
+uint16_t update_crc(uint16_t crc_accum, uint8_t *data_blk_ptr, uint16_t data_blk_size)
 {
   unsigned short i, j;
   unsigned short crc_table[256] = {
