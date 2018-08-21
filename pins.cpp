@@ -3,11 +3,6 @@
 namespace pins {
 
   void init() {
-    pinMode(PAN_MOTOR_DRV_IN1, OUTPUT);
-    pinMode(PAN_MOTOR_DRV_IN2, OUTPUT);
-    pinMode(PAN_MOTOR_DRV_EN, OUTPUT);
-    pinMode(PAN_MOTOR_HALL_A, INPUT);
-    pinMode(PAN_MOTOR_HALL_B, INPUT);
 
     pinMode(DX_TTL_TX_EN, OUTPUT);
 
