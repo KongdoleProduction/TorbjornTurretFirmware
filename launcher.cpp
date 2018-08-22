@@ -3,6 +3,7 @@
 #include <Servo.h>
 
 namespace launcher {
+  bool _isArmed = false;
 
   Servo roller_l1;
   Servo roller_l2;
@@ -24,9 +25,13 @@ namespace launcher {
 
     bolt_l.attach(pins::BOLT_SERVO_L);
     bolt_r.attach(pins::BOLT_SERVO_R);
+    bolt_l.writeMicroseconds(BOLT_SERVO_L_PUSH);
+    bolt_r.writeMicroseconds(BOLT_SERVO_R_PUSH);
 
     barrel_l.attach(pins::BARREL_SERVO_L);
     barrel_r.attach(pins::BARREL_SERVO_R);
+    barrel_l.writeMicroseconds(BARREL_SERVO_L_PUSH);
+    barrel_r.writeMicroseconds(BARREL_SERVO_R_PUSH);
   }
 
   void arm() {
@@ -34,6 +39,8 @@ namespace launcher {
     roller_l2.writeMicroseconds(ROLLER_MAX);
     roller_r1.writeMicroseconds(ROLLER_MAX);
     roller_r2.writeMicroseconds(ROLLER_MAX);
+
+    _isArmed = true;
   }
 
   void disarm() {
@@ -41,12 +48,44 @@ namespace launcher {
     roller_l2.writeMicroseconds(ROLLER_IDLE);
     roller_r1.writeMicroseconds(ROLLER_IDLE);
     roller_r2.writeMicroseconds(ROLLER_IDLE);
+
+    _isArmed = false;
+  }
+
+  bool isArmed() {
+    return _isArmed;
   }
 
   void fire_left() {
+    bolt_l.writeMicroseconds(BOLT_SERVO_L_PULL);
+    delay(200);
+    bolt_l.writeMicroseconds(BOLT_SERVO_L_PUSH);
+    barrel_l.writeMicroseconds(BARREL_SERVO_L_PULL);
+    delay(100);
+    barrel_l.writeMicroseconds(BARREL_SERVO_L_PUSH);
+    delay(300);
   }
 
   void fire_right() {
+    bolt_r.writeMicroseconds(BOLT_SERVO_R_PULL);
+    delay(200);
+    bolt_r.writeMicroseconds(BOLT_SERVO_R_PUSH);
+    barrel_r.writeMicroseconds(BARREL_SERVO_R_PULL);
+    delay(100);
+    barrel_r.writeMicroseconds(BARREL_SERVO_R_PUSH);
+    delay(300);
+  }
+
+  void fire_one() {
+    static bool toggle_lr = false;
+
+    if (!toggle_lr) {
+      fire_left();
+      toggle_lr = true;
+    } else {
+      fire_right();
+      toggle_lr = false;
+    }
   }
   
 }

@@ -12,16 +12,18 @@ namespace launcher {
   const uint16_t BOLT_SERVO_R_PUSH = 1300;
   const uint16_t BOLT_SERVO_R_PULL = 1950;
   
-  const uint16_t BARREL_SERVO_L_PUSH = 1500;
-  const uint16_t BARREL_SERVO_L_PULL = 1500;
-  const uint16_t BARREL_SERVO_R_PUSH = 1500;
-  const uint16_t BARREL_SERVO_R_PULL = 1500;
+  const uint16_t BARREL_SERVO_L_PUSH = 1050;
+  const uint16_t BARREL_SERVO_L_PULL = 1250;
+  const uint16_t BARREL_SERVO_R_PUSH = 2000;
+  const uint16_t BARREL_SERVO_R_PULL = 1800;
 
   void init();
   void arm();
   void disarm();
+  bool isArmed();
   void fire_left();
   void fire_right();
+  void fire_one();
 }
 
 #endif
