@@ -32,6 +32,7 @@ void setup()
 
 void loop()
 {
+  static int tilt_desired = 0;
   int rc[6]; 
   receiver::readReceiver(rc);
   for (int i=0; i<6; i++) {
@@ -40,15 +41,18 @@ void loop()
   }
   Serial.println("");
 
-  uint16_t tilt_ang_1 = map(rc[2], 970, 2030, 1700, 2395);
-  uint16_t tilt_ang_2 = map(rc[2], 970, 2030, 2395, 1700);
-  dx::move(1, tilt_ang_1);
+  int tilt_desired_diff = rc[2] - receiver::RC3_MID;
+  tilt_desired_diff = - tilt_desired_diff;
+  if (abs(tilt_desired_diff) < 10) tilt_desired_diff = 0;
+  tilt_desired += (tilt_desired_diff >> 4);
+  tilt_desired = constrain(tilt_desired, -350, 350);
+  Serial.println(tilt_desired);
+  dx::move(1, 2048 + tilt_desired);
   delay(5);
-  dx::move(2, tilt_ang_2 - 70);
+  dx::move(2, 1980 - tilt_desired);
 
   float pan_speed = ((float)rc[1] - receiver::RC2_MID) / (receiver::RC2_MAX - receiver::RC2_MID);
-  Serial.println(pan_speed);
-  pan_controller::move(pan_speed);
+  pan_controller::move(-pan_speed);
 
   if (rc[4] > receiver::RC5_MID) {
     launcher::arm();

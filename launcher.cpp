@@ -58,22 +58,22 @@ namespace launcher {
 
   void fire_left() {
     bolt_l.writeMicroseconds(BOLT_SERVO_L_PULL);
-    delay(200);
-    bolt_l.writeMicroseconds(BOLT_SERVO_L_PUSH);
-    barrel_l.writeMicroseconds(BARREL_SERVO_L_PULL);
-    delay(100);
-    barrel_l.writeMicroseconds(BARREL_SERVO_L_PUSH);
     delay(300);
+    bolt_l.writeMicroseconds(BOLT_SERVO_L_PUSH);
+    //barrel_l.writeMicroseconds(BARREL_SERVO_L_PULL);
+    //delay(50);
+    //barrel_l.writeMicroseconds(BARREL_SERVO_L_PUSH);
+    //delay(100);
   }
 
   void fire_right() {
     bolt_r.writeMicroseconds(BOLT_SERVO_R_PULL);
-    delay(200);
-    bolt_r.writeMicroseconds(BOLT_SERVO_R_PUSH);
-    barrel_r.writeMicroseconds(BARREL_SERVO_R_PULL);
-    delay(100);
-    barrel_r.writeMicroseconds(BARREL_SERVO_R_PUSH);
     delay(300);
+    bolt_r.writeMicroseconds(BOLT_SERVO_R_PUSH);
+    //barrel_r.writeMicroseconds(BARREL_SERVO_R_PULL);
+    //delay(50);
+    //barrel_r.writeMicroseconds(BARREL_SERVO_R_PUSH);
+    //delay(100);
   }
 
   void fire_one() {
