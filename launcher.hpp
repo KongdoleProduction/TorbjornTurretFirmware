@@ -5,17 +5,17 @@
 
 namespace launcher {
   const uint16_t ROLLER_IDLE = 980;
-  const uint16_t ROLLER_MAX  = 1700;
+  const uint16_t ROLLER_MAX  = 1400;
 
-  const uint16_t BOLT_SERVO_L_PUSH = 1850;
-  const uint16_t BOLT_SERVO_L_PULL = 1150;
-  const uint16_t BOLT_SERVO_R_PUSH = 1200;
-  const uint16_t BOLT_SERVO_R_PULL = 2000;
+  const uint16_t BOLT_SERVO_L_PUSH = 1000;
+  const uint16_t BOLT_SERVO_L_PULL = 1850;
+  const uint16_t BOLT_SERVO_R_PUSH = 1900;
+  const uint16_t BOLT_SERVO_R_PULL = 1100;
   
-  const uint16_t BARREL_SERVO_L_PUSH = 1050;
-  const uint16_t BARREL_SERVO_L_PULL = 1250;
-  const uint16_t BARREL_SERVO_R_PUSH = 2000;
-  const uint16_t BARREL_SERVO_R_PULL = 1800;
+  const uint16_t BARREL_SERVO_L_PUSH = 1200;
+  const uint16_t BARREL_SERVO_L_PULL = 1200;
+  const uint16_t BARREL_SERVO_R_PUSH = 1900;
+  const uint16_t BARREL_SERVO_R_PULL = 1900;
 
   void init();
   void arm();

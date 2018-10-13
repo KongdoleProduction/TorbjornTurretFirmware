@@ -45,7 +45,7 @@ void loop()
   tilt_desired_diff = - tilt_desired_diff;
   if (abs(tilt_desired_diff) < 10) tilt_desired_diff = 0;
   tilt_desired += (tilt_desired_diff >> 4);
-  tilt_desired = constrain(tilt_desired, -350, 350);
+  tilt_desired = constrain(tilt_desired, -150, 550);
   Serial.println(tilt_desired);
   dx::move(1, 2048 + tilt_desired);
   delay(5);
