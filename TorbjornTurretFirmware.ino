@@ -32,6 +32,11 @@ void setup()
 
 void loop()
 {
+  move_manual();
+  //move_auto();
+}
+
+void move_manual() {
   static int tilt_desired = 0;
   int rc[6]; 
   receiver::readReceiver(rc);
@@ -65,4 +70,27 @@ void loop()
   }
 
   delay(50);
+}
+
+void move_auto() {
+  int tilt_desired;
+  float pan_speed;
+
+  tilt_desired = random(-100, 400);
+  pan_speed = random(-0.5, 0.5);
+
+  for (int i=0; i<5; i++) {
+    int tilt_diff = float(tilt_desired) * i / 20.0; 
+    dx::move(1, 2048 + tilt_diff);
+    delay(5);
+    dx::move(2, 1980 - tilt_diff);
+
+    if (pan_speed > 0.4 || pan_speed < -0.4) {
+      pan_controller::move(pan_speed);
+    }
+
+    delay(50);
+  }
+
+  delay(1500);
 }

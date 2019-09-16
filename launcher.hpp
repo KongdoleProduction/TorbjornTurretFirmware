@@ -5,7 +5,7 @@
 
 namespace launcher {
   const uint16_t ROLLER_IDLE = 980;
-  const uint16_t ROLLER_MAX  = 1400;
+  const uint16_t ROLLER_MAX  = 1350;
 
   const uint16_t BOLT_SERVO_L_PUSH = 1000;
   const uint16_t BOLT_SERVO_L_PULL = 1850;
